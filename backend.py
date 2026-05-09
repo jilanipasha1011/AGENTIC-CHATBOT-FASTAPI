@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 from typing import List
 from fastapi import FastAPI
-# 1. Update the import to match our new streaming function
-from ai_agent import stream_response_from_ai_agent 
+from fastapi.middleware.cors import CORSMiddleware
+from ai_agent import stream_response_from_ai_agent
 
 # Step 1: Pydantic schema
 class RequestState(BaseModel):
@@ -11,7 +11,7 @@ class RequestState(BaseModel):
     system_prompt: str
     messages: List[str]
     allow_search: bool
-    session_id: str  # <--- 2. NEW: Required to track user memory
+    session_id: str
 
 ALLOWED_MODEL_NAMES = [
     "llama3-70b-8192",
@@ -22,6 +22,14 @@ ALLOWED_MODEL_NAMES = [
 
 app = FastAPI(title="LangGraph AI Agent")
 
+# CORS — allows React (Vercel) to call this backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],   # tighten to your Vercel domain after deploy
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Step 2: Chat endpoint
 @app.post("/chat")
@@ -39,20 +47,23 @@ def chat_endpoint(request: RequestState):
     allow_search = request.allow_search
     system_prompt = request.system_prompt
     provider = request.model_provider
-    session_id = request.session_id  # <--- Get the session ID
+    session_id = request.session_id
 
-    # 3. Return the StreamingResponse directly
     return stream_response_from_ai_agent(
-        llm_id=llm_id, 
-        query=query, 
-        allow_search=allow_search, 
-        system_prompt=system_prompt, 
+        llm_id=llm_id,
+        query=query,
+        allow_search=allow_search,
+        system_prompt=system_prompt,
         provider=provider,
         session_id=session_id
     )
 
+# Step 3: Health check (Render uses this to confirm the app is up)
+@app.get("/")
+def health_check():
+    return {"status": "ok", "message": "LangGraph AI Agent is running!"}
 
-# Step 3: Run app
+# Step 4: Run app
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=9999)
+    uvicorn.run(app, host="0.0.0.0", port=9999)
