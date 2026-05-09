@@ -37,7 +37,7 @@ user_query = st.text_area(
     placeholder="Ask Anything!"
 )
 
-API_URL = "http://127.0.0.1:9999/chat"
+API_URL = "https://fast-api-du5z.onrender.com/"
 
 # Step 2: Send request to backend
 if st.button("Ask Agent!"):
