@@ -9,7 +9,7 @@ export default defineConfig({
     proxy: {
       // Proxy /chat to local backend during development
       '/chat': {
-        target: 'http://127.0.0.1:9999',
+        target: 'https://fast-api-du5z.onrender.com/',
         changeOrigin: true,
       }
     }
