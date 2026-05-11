@@ -103,7 +103,7 @@ export default function App() {
     } catch (err) {
       if (err.name === 'AbortError') return // user cancelled — silent
       if (err.message.includes('fetch') || err.message.includes('Failed')) {
-        const target = API_BASE || 'http://localhost:9999'
+        const target = API_BASE || 'https://fast-api-du5z.onrender.com/'
         setAlertMsg({
           type: 'error',
           text: `Cannot connect to backend at ${target}. Check that VITE_API_URL is set correctly in Vercel and the Render service is running.`,
