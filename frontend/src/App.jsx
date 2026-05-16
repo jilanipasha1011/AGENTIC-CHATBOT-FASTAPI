@@ -5,7 +5,7 @@ import { useState, useRef, useCallback } from 'react'
 // In development the Vite proxy forwards /chat → localhost:9999.
 const API_BASE = import.meta.env.VITE_API_URL || ''
 
-const MODEL_NAMES_GROQ  = ['llama-3.3-70b-versatile', 'mixtral-8x7b-32768']
+const MODEL_NAMES_GROQ = ['llama-3.3-70b-versatile', 'mixtral-8x7b-32768']
 const MODEL_NAMES_OPENAI = ['gpt-4o-mini']
 
 // Generate a UUID v4 (used for session memory)
@@ -20,19 +20,19 @@ function generateUUID() {
 export default function App() {
   // ── Session ID — generated once per page load, mirrors st.session_state.session_id
   const sessionId = useRef(generateUUID()).current
-  const shortId    = sessionId.slice(0, 8)
+  const shortId = sessionId.slice(0, 8)
 
   // ── Form state
-  const [systemPrompt,   setSystemPrompt]   = useState('')
-  const [provider,       setProvider]       = useState('Groq')
-  const [selectedModel,  setSelectedModel]  = useState(MODEL_NAMES_GROQ[0])
+  const [systemPrompt, setSystemPrompt] = useState('')
+  const [provider, setProvider] = useState('Groq')
+  const [selectedModel, setSelectedModel] = useState(MODEL_NAMES_GROQ[0])
   const [allowWebSearch, setAllowWebSearch] = useState(false)
-  const [userQuery,      setUserQuery]      = useState('')
+  const [userQuery, setUserQuery] = useState('')
 
   // ── Response / UI state
   const [responseText, setResponseText] = useState('')
-  const [isStreaming,  setIsStreaming]  = useState(false)
-  const [alertMsg,     setAlertMsg]     = useState(null) // { type: 'warning'|'error', text }
+  const [isStreaming, setIsStreaming] = useState(false)
+  const [alertMsg, setAlertMsg] = useState(null) // { type: 'warning'|'error', text }
   const abortRef = useRef(null)
 
   // ── Provider change → reset model to first of new list
@@ -59,20 +59,20 @@ export default function App() {
     setIsStreaming(true)
 
     const payload = {
-      model_name:     selectedModel,
+      model_name: selectedModel,
       model_provider: provider,
-      system_prompt:  systemPrompt,
-      messages:       [userQuery],
-      allow_search:   allowWebSearch,
-      session_id:     sessionId,
+      system_prompt: systemPrompt,
+      messages: [userQuery],
+      allow_search: allowWebSearch,
+      session_id: sessionId,
     }
 
     try {
       const res = await fetch(`${API_BASE}/chat`, {
-        method:  'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(payload),
-        signal:  controller.signal,
+        body: JSON.stringify(payload),
+        signal: controller.signal,
       })
 
       if (res.status === 422) {
@@ -130,9 +130,9 @@ export default function App() {
         {/* ── HEADER ── */}
         <header className="app-header">
           <div className="badge">
-            <span>⚡</span> LangGraph Powered
+            <span>⚡</span> AI Agents Platform
           </div>
-          <h1>AI Chatbot Agents 🤖</h1>
+          <h1> Agentic Chatbot Platform 🤖</h1>
           <p className="subtitle">
             Create and Interact with the AI Agents!
             <span className="session-tag">Session: {shortId}</span>
@@ -144,7 +144,7 @@ export default function App() {
 
           {/* System Prompt */}
           <div className="form-group">
-            <label htmlFor="system-prompt">Define your AI Agent:</label>
+            <label htmlFor="system-prompt">Define your AI Agent Example: You are a Business Analyst</label>
             <textarea
               id="system-prompt"
               rows={3}
@@ -215,7 +215,7 @@ export default function App() {
         {/* ── QUERY CARD ── */}
         <div className="glass-card">
           <div className="form-group">
-            <label htmlFor="user-query">Enter your query:</label>
+            <label htmlFor="user-query">Enter your query. Example: Suggest some stocks to buy in 2026.</label>
             <textarea
               id="user-query"
               rows={5}
@@ -252,7 +252,7 @@ export default function App() {
                   </span>
                 </>
               ) : (
-                <>🚀 Ask Agent!</>
+                <> Ask Agent!</>
               )}
             </span>
           </button>
