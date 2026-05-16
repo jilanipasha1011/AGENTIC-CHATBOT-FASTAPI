@@ -1,8 +1,15 @@
-fastapi==0.115.12
-uvicorn==0.34.2
+# Core API
+fastapi==0.136.1
+uvicorn[standard]==0.46.0
 python-dotenv==1.1.0
-langchain-groq==0.3.2
-langchain-openai==0.3.16
-langchain-tavily==0.1.6
-langgraph==0.4.3
-langchain-core==0.3.58
+
+# LangChain / LangGraph — pinned to known-working versions (matching local venv)
+langgraph==1.1.10
+langchain-core==1.3.2
+langchain-groq==1.1.2
+langchain-openai==1.2.1
+langchain-tavily==0.2.18
+langchain==1.2.17
+
+# Pydantic v2
+pydantic==2.11.4
